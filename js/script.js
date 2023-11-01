@@ -181,7 +181,7 @@ document.getElementById("busqueda").addEventListener("input",buscador)
 
 
 
-dicc = {
+dicc =  {
     "nombre": "/",
     "elementos": [
         "error.log",
