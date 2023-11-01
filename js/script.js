@@ -178,9 +178,6 @@ document.getElementById("busqueda").addEventListener("input",buscador)
 
 
 
-
-
-
 dicc = {
     "nombre": "/",
     "elementos": [
