@@ -167,7 +167,7 @@ function buscador(){
     })
 }
 document.getElementById("busqueda").addEventListener("input",buscador)
-
+//
 //keyboard listener //hacer que al anhadir se actualize la busqueda
 
 
