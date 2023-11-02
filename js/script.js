@@ -5,6 +5,7 @@ var iconos ={"txt":'<i class="fa-solid fa-note-sticky fa-2xl icon"></i>',
         "mp3":'<i class="fa-solid fa-music fa-2xl icon"></i>'}
 
 class Folder{
+
     constructor(nombre,ulPadre){
         this.ul = document.createElement("ul")
         this.ul.innerHTML = iconos["folder"]
@@ -131,8 +132,14 @@ window.onbeforeunload = function(){
     localStorage["arbol"] = JSON.stringify(home.exportar(home.ul))
 }
 
-
+/**
+ * funcpoisdnads
+ * @param {String} nombre 
+ * @param {HTMLElement} ulEnElQueBuscar 
+ * @returns 
+ */
 function buscar(nombre,ulEnElQueBuscar){
+    ulEnElQueBuscar.title
     let resultado = []
     for (elemento of Array.from(ulEnElQueBuscar.children)) {
         if(!["UL","LI"].includes(elemento.tagName)){
@@ -149,6 +156,7 @@ function buscar(nombre,ulEnElQueBuscar){
 }
 
 var resultadoDeBuscar = []
+
 function buscador(){
     document.getElementById("resultadoBusqueda").innerHTML = ""
     let textoIntroducido =document.getElementById("busqueda").value
@@ -177,8 +185,11 @@ document.getElementById("busqueda").addEventListener("input",buscador)
 
 
 
-
-dicc = {
+/**
+ * asdasd
+ * @type {String}
+ */
+let dicc = {
     "nombre": "/",
     "elementos": [
         "error.log",
@@ -232,3 +243,5 @@ dicc = {
         "stadistics.log"
     ]
 }
+
+
