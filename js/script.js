@@ -5,7 +5,6 @@ var iconos ={"txt":'<i class="fa-solid fa-note-sticky fa-2xl icon"></i>',
         "mp3":'<i class="fa-solid fa-music fa-2xl icon"></i>'}
 
 class Folder{
-
     constructor(nombre,ulPadre){
         this.ul = document.createElement("ul")
         this.ul.innerHTML = iconos["folder"]
@@ -112,10 +111,21 @@ class Folder{
 
 
 // boton para generar un directorio de ejemplo
-boton = document.createElement("button")
-boton.innerText = "crear arbol de ejemplo"
-document.getElementById("directorio").append(boton)
-boton.onclick = function(){home.importar(dicc)}
+let botonCreador = document.createElement("button")
+botonCreador.innerText = "crear arbol de ejemplo"
+document.getElementById("directorio").append(botonCreador)
+botonCreador.onclick = function(){home.importar(dicc)}
+
+//boton para eliminar arbol
+let botonEliminador = document.createElement("button");
+botonEliminador.innerHTML = "Eliminar arbol"
+document.getElementById("directorio").append(botonEliminador)
+botonEliminador.onclick = function(){Array.from(home.ul.children).forEach(function(hijo){
+    if(["UL","LI"].includes(hijo.tagName)){
+        hijo.remove()
+    }
+})}
+
 
 
 
@@ -132,14 +142,8 @@ window.onbeforeunload = function(){
     localStorage["arbol"] = JSON.stringify(home.exportar(home.ul))
 }
 
-/**
- * funcpoisdnads
- * @param {String} nombre 
- * @param {HTMLElement} ulEnElQueBuscar 
- * @returns 
- */
+
 function buscar(nombre,ulEnElQueBuscar){
-    ulEnElQueBuscar.title
     let resultado = []
     for (elemento of Array.from(ulEnElQueBuscar.children)) {
         if(!["UL","LI"].includes(elemento.tagName)){
@@ -156,7 +160,6 @@ function buscar(nombre,ulEnElQueBuscar){
 }
 
 var resultadoDeBuscar = []
-
 function buscador(){
     document.getElementById("resultadoBusqueda").innerHTML = ""
     let textoIntroducido =document.getElementById("busqueda").value
@@ -173,10 +176,20 @@ function buscador(){
 
         document.getElementById("resultadoBusqueda").appendChild(nodo)
     })
-}
+    }
 document.getElementById("busqueda").addEventListener("input",buscador)
-//
+
 //keyboard listener //hacer que al anhadir se actualize la busqueda
+let busqueda = document.getElementById("busqueda")
+busqueda.addEventListener("keydown",function(e){
+    if(e.key == "Tab"){
+        e.preventDefault()
+        if(resultadoDeBuscar.length == 1){
+            busqueda.value = resultadoDeBuscar[0].childNodes[1].data
+        }
+    }
+    }
+)
 
 
 
@@ -185,11 +198,10 @@ document.getElementById("busqueda").addEventListener("input",buscador)
 
 
 
-/**
- * asdasd
- * @type {String}
- */
-let dicc = {
+
+
+
+dicc = {
     "nombre": "/",
     "elementos": [
         "error.log",
@@ -243,5 +255,3 @@ let dicc = {
         "stadistics.log"
     ]
 }
-
-

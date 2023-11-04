@@ -1,4 +1,4 @@
-*{border: 1px solid green;}
+/* *{border: 1px solid green;} */
 body{
     padding: 50px;
 }
@@ -48,5 +48,5 @@ button{
     float: inline-end;
 }
 .contraer > li, .contraer > ul{
-    display: none; 
+    display: none;
 }
