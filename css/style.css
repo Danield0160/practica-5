@@ -45,7 +45,8 @@ button{
     display: inline-block;
 }
 #buscador{
-    float: inline-end;
+    vertical-align: top;
+    margin-left: 100px;
 }
 .contraer > li, .contraer > ul{
     display: none;

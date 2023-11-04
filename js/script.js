@@ -15,18 +15,18 @@ var iconos = {
  ** Clase que representa una carpeta o un "ul", contiene toda la logica relacioanada con los directorios
  ** Realiza las acciones añadir un elemento y quitarlo, ademas de desplegar las carpetas
  */
-class Folder{
+class Folder {
 
     /**
      * Crea un ul, le agrega el icono, el nombre y los botones, y lo engancha al ulPadre  si hay
      * @param {String} nombre nombre de la carpeta
      * @param {?HTMLUListElement} ulPadre ul en el que se enganchara la carpeta
      */
-    constructor(nombre,ulPadre){
+    constructor(nombre, ulPadre) {
         this.ul = document.createElement("ul")
         this.ul.innerHTML = iconos["folder"]
-        this.ul.innerHTML += nombre        
-        if(ulPadre){
+        this.ul.innerHTML += nombre
+        if (ulPadre) {
             ulPadre.append(this.ul)
         }
         this.anhadirBotonDeAnhadir()
@@ -38,27 +38,27 @@ class Folder{
      * Añade un elemento al ul, dependiendo de si tiene una extension o no, creara un elemento o una carpeta
      * @param {String} nombre nombre del elemento, si no tiene punto, creara una carpeta 
      */
-    anhadirElemento(nombre){
-        // Comprueba si hay un elemento en el nivel que se va a añadir, si existe, no lo crea
+    anhadirElemento(nombre) {
+        // Comprueba si hay un elemento en el nivel que se va a añadir, si existe no lo crea
         let existeElemento = false
-        Array.from(this.ul.children).forEach(function(hijo){
-            if(["UL","LI"].includes(hijo.tagName)){
-                if(hijo.childNodes[1].data == nombre){ 
+        Array.from(this.ul.children).forEach(function (hijo) {
+            if (["UL", "LI"].includes(hijo.tagName)) {
+                if (hijo.childNodes[1].data == nombre) {
                     existeElemento = true
                 }
             }
         })
-        if(existeElemento){
+        if (existeElemento) {
             return
         }
-        if(nombre.split(".").length == 2 && nombre.split(".")[1]){ // Comprueeba si tiene una extension
+        if (nombre.split(".").length == 2 && nombre.split(".")[1]) { // Comprueeba si tiene una extension
             let archivo = document.createElement("li")
             archivo.innerHTML = iconos[nombre.split(".")[1]] || iconos["ERROR"] //añade el icono de la extension, si no hay, añade el icono de error 
             archivo.innerHTML += nombre
             this.ul.appendChild(archivo)
             this.anhadirBotonEliminar(archivo)
-        }else if(nombre.split(".").length == 1){ // si no tiene extension, significa que es una carpeta
-            new Folder(nombre,this.ul)
+        } else if (nombre.split(".").length == 1) { // si no tiene extension, significa que es una carpeta
+            new Folder(nombre, this.ul)
         }
         buscador() //actualiza el buscador para que si el nuevo elemento coincide con la busqueda, aparezca tambien
     }
@@ -67,10 +67,10 @@ class Folder{
      * añade el boton de añadir a la carpeta, que se usara para indicar que el texto introducido en el input se use para 
      * crear un archivo o carpeta, en esta carpeta
      */
-    anhadirBotonDeAnhadir(){
+    anhadirBotonDeAnhadir() {
         let botonAnhadir = document.createElement("button")
         botonAnhadir.innerHTML = "+"
-        botonAnhadir.onclick=function(){this.anhadirElemento(document.getElementById("nombre").value )}.bind(this)
+        botonAnhadir.onclick = function () { this.anhadirElemento(document.getElementById("nombre").value) }.bind(this)
         this.ul.append(botonAnhadir)
     }
 
@@ -78,15 +78,16 @@ class Folder{
      * Añade el boton de elminar a la carpeta o a un archivo, que eliminara el elemento actual, en el caso de que no tenga carpetas o arhivos hijos
      * @param {HTMLUListElement}  elemento 
      */
-    anhadirBotonEliminar(elemento = this.ul){
-        if(!elemento.parentElement || elemento.parentElement.tagName == "DIV" ){
+    anhadirBotonEliminar(elemento = this.ul) {
+        if (!elemento.parentElement || elemento.parentElement.tagName == "DIV") {
             return
         }
         let buttonEliminar = document.createElement("button")
         buttonEliminar.innerHTML = "X"
-        buttonEliminar.addEventListener("click",function(e){
-            if(e.target.parentElement.querySelectorAll("ul, li").length == 0 && e.target.parentElement.parentElement.tagName != "DIV"){
+        buttonEliminar.addEventListener("click", function (e) {
+            if (e.target.parentElement.querySelectorAll("ul, li").length == 0 && e.target.parentElement.parentElement.tagName != "DIV") {
                 e.target.parentElement.remove()
+                buscador()
             }
         })
         elemento.appendChild(buttonEliminar)
@@ -95,18 +96,18 @@ class Folder{
     /**
      * añade un boton a la carpeta para ocultar o mostrar sus elementos
      */
-    anhadirBotonExpandir(){
+    anhadirBotonExpandir() {
         let botonExpandir = document.createElement("button")
         botonExpandir.innerText = "^"
-        botonExpandir.onclick = function(){
+        botonExpandir.onclick = function () {
             this.ul.classList.toggle("contraer")
-            if(botonExpandir.innerText == "v"){
+            if (botonExpandir.innerText == "v") {
                 botonExpandir.innerText = "^"
-            }else{
+            } else {
                 botonExpandir.innerText = "v"
             }
         }.bind(this)
-        
+
         this.ul.append(botonExpandir)
     }
 
@@ -116,18 +117,18 @@ class Folder{
      * @param {HTMLUListElement} listaUl 
      * @returns {{"nombre":String,"elementos":[...String, ...{"nombre":String,"elementos":[]}]}} diccionario que representa el arbol de la ul pasada
      */
-    exportar(listaUl){
+    exportar(listaUl) {
         let diccionario = {}
         diccionario["nombre"] = listaUl.childNodes[1].data
 
-        diccionario["elementos"] =  []
-        Array.from(listaUl.children).forEach(function(elemento){
-            if(elemento.tagName == "LI"){
-                diccionario["elementos"].push(elemento.innerText.slice(0,-1)) // si es un archivo lo mete como una string en la lista "elementos"
-            }else if(elemento.tagName == "UL"){
+        diccionario["elementos"] = []
+        Array.from(listaUl.children).forEach(function (elemento) {
+            if (elemento.tagName == "LI") {
+                diccionario["elementos"].push(elemento.innerText.slice(0, -1)) // si es un archivo lo mete como una string en la lista "elementos"
+            } else if (elemento.tagName == "UL") {
                 diccionario["elementos"].push(this.exportar(elemento)) // si es una carpeta, lo mete como un diccionario en la lista "elementos"
             }
-        },this)
+        }, this)
         return diccionario
     }
     //importa el arbol pasado como diccionario al objeto folder
@@ -136,17 +137,17 @@ class Folder{
      * Transforma la carpeta actual en la carpeta pasada como parametro en formato diccionario, obtenida mediante exportacion, de forna recursiva
      * @param {Diccionario} diccionario 
      */
-    importar(diccionario){
-        this.ul.innerHTML = iconos["folder"] 
+    importar(diccionario) {
+        this.ul.innerHTML = iconos["folder"]
         this.ul.innerHTML += diccionario["nombre"]
         this.anhadirBotonDeAnhadir()
         this.anhadirBotonEliminar()
         this.anhadirBotonExpandir()
         for (const archivo of diccionario["elementos"]) {
-            if(typeof archivo == "string"){
+            if (typeof archivo == "string") {
                 this.anhadirElemento(archivo)
-            }else{
-                new Folder(archivo["nombre"],this.ul).importar(archivo)
+            } else {
+                new Folder(archivo["nombre"], this.ul).importar(archivo)
             }
         }
     }
@@ -157,34 +158,37 @@ class Folder{
 let botonCreador = document.createElement("button")
 botonCreador.innerText = "crear arbol de ejemplo"
 document.getElementById("directorio").append(botonCreador)
-botonCreador.onclick = function(){home.importar(dicc)}
+botonCreador.onclick = function () { home.importar(dicc) }
 
 
 //boton para eliminar el arbol actual
 let botonEliminador = document.createElement("button");
 botonEliminador.innerHTML = "Eliminar arbol"
 document.getElementById("directorio").append(botonEliminador)
-botonEliminador.onclick = function(){Array.from(home.ul.children).forEach(function(hijo){
-    if(["UL","LI"].includes(hijo.tagName)){
-        hijo.remove()
-    }
-})}
+botonEliminador.onclick = function () {
+    Array.from(home.ul.children).forEach(function (hijo) {
+        if (["UL", "LI"].includes(hijo.tagName)) {
+            hijo.remove()
+        }
+        buscador()
+    })
+}
 
 
 
 // Carpeta raiz
-let home =new Folder("/")
+let home = new Folder("/")
 document.getElementById("directorio").append(home.ul)
 
 
 
 // comprueba si existe un arbol guardado en localStorage, y si lo hay, lo importa
-if(localStorage.arbol){
+if (localStorage.arbol) {
     home.importar(JSON.parse(localStorage["arbol"]))
 }
 
 // Cuando se cierra la pagina o se recarga, guarda el arbol en localStorage
-window.onbeforeunload = function(){
+window.onbeforeunload = function () {
     localStorage["arbol"] = JSON.stringify(home.exportar(home.ul))
 }
 
@@ -195,17 +199,17 @@ window.onbeforeunload = function(){
  * @param {HTMLUListElement} ulEnElQueBuscar 
  * @returns {[...HTMLUListElement]}
  */
-function buscar(nombre,ulEnElQueBuscar){
+function buscar(nombre, ulEnElQueBuscar) {
     let resultado = []
     for (elemento of Array.from(ulEnElQueBuscar.children)) {
-        if(!["UL","LI"].includes(elemento.tagName)){
+        if (!["UL", "LI"].includes(elemento.tagName)) {
             continue
         }
-        if(elemento.childNodes[1].data.includes(nombre)){
+        if (elemento.childNodes[1].data.includes(nombre)) {
             resultado.push(elemento)
         }
-        if(elemento.tagName == "UL"){
-            resultado.push(...buscar(nombre,elemento)) //si es un ul, hace un buscar() dentro de el
+        if (elemento.tagName == "UL") {
+            resultado.push(...buscar(nombre, elemento)) //si es un ul, hace un buscar() dentro de el
         }
     }
     return resultado
@@ -216,15 +220,15 @@ var resultadoDeBuscar = []
 
 // funcion usada para el evento input del cuadro de busqueda, usa buscar() con el texto del input busqueda
 // y añade los elementos encontrados al div resultadoBusqueda
-function buscador(){
+function buscador() {
     document.getElementById("resultadoBusqueda").innerHTML = ""
-    let textoIntroducido =document.getElementById("busqueda").value
-    if(textoIntroducido){
-        resultadoDeBuscar = buscar(textoIntroducido,home.ul)
-    }else{
+    let textoIntroducido = document.getElementById("busqueda").value
+    if (textoIntroducido) {
+        resultadoDeBuscar = buscar(textoIntroducido, home.ul)
+    } else {
         resultadoDeBuscar = []
     }
-    resultadoDeBuscar.forEach(function(value){
+    resultadoDeBuscar.forEach(function (value) {
         let nodo = value.cloneNode()
         nodo.appendChild(value.firstChild.cloneNode())
         nodo.innerHTML += value.childNodes[1].data
@@ -233,21 +237,20 @@ function buscador(){
     })
 }
 // buscador de archivos y carpetas 
-document.getElementById("busqueda").addEventListener("input",buscador)
+document.getElementById("busqueda").addEventListener("input", buscador)
 
 
 
 // el autocompletado del input de busqueda para cuando solo existe una coincidencia
 let busqueda = document.getElementById("busqueda")
-busqueda.addEventListener("keydown",function(e){
-    if(e.key == "Tab"){
+busqueda.addEventListener("keydown", function (e) {
+    if (e.key == "Tab") {
         e.preventDefault()
-        if(resultadoDeBuscar.length == 1){
+        if (resultadoDeBuscar.length == 1) {
             busqueda.value = resultadoDeBuscar[0].childNodes[1].data
         }
     }
-    }
-)
+})
 
 
 
