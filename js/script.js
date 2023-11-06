@@ -224,7 +224,7 @@ function buscador() {
     document.getElementById("resultadoBusqueda").innerHTML = ""
     let textoIntroducido = document.getElementById("busqueda").value
     if (textoIntroducido) {
-        resultadoDeBuscar = buscar(textoIntroducido, home.ul)
+        resultadoDeBuscar = buscar(textoIntroducido, document.getElementById("directorio"))
     } else {
         resultadoDeBuscar = []
     }
@@ -236,6 +236,29 @@ function buscador() {
         document.getElementById("resultadoBusqueda").appendChild(nodo)
     })
 }
+
+// //funcion alternativa para el buscador
+// function buscadorAlternativo(){
+//     let textoIntroducido = document.getElementById("busqueda").value
+//     if (textoIntroducido) {
+//         resultadoDeBuscar = buscar(textoIntroducido, document.getElementById("directorio"))
+//         Array.from(document.querySelectorAll("ul,li")).forEach(function(elemento){
+//             elemento.classList.add("oculto")
+//         })
+//         resultadoDeBuscar.forEach(function(elemento){
+//             elemento.classList.remove("oculto")
+//         })
+//     } else {
+//         resultadoDeBuscar = []
+//         let ocultos = document.querySelectorAll(".oculto")
+//         Array.from(ocultos).forEach(function(elemento){
+//             elemento.classList.remove("oculto")
+//         })
+//     }
+// }
+
+
+
 // buscador de archivos y carpetas 
 document.getElementById("busqueda").addEventListener("input", buscador)
 

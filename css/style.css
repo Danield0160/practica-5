@@ -51,3 +51,24 @@ button{
 .contraer > li, .contraer > ul{
     display: none;
 }
+
+
+
+
+.oculto{
+    visibility: collapse !important;
+    padding: 0;
+}
+li.oculto{
+    height: 0;
+    margin-top: -0px;
+    margin-bottom: -0px;
+}
+ul.oculto{
+    margin-top: -20px;
+    margin-bottom: -10px;
+}
+.oculto>li, .oculto>ul{
+    visibility: visible;
+    display: block;
+}
