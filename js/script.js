@@ -23,11 +23,13 @@ class Folder {
      * @param {?HTMLUListElement} ulPadre ul en el que se enganchara la carpeta
      */
     constructor(nombre, ulPadre) {
-        this.ul = document.createElement("ul")
-        this.ul.innerHTML = iconos["folder"]
-        this.ul.innerHTML += nombre
+        this.ul = $(document.createElement("ul"))
+            .html(iconos["folder"] + nombre)
         if (ulPadre) {
+            // this.ul.fadeOut(0)
             ulPadre.append(this.ul)
+            // setTimeout(10,this.ul.slideDown(300))
+            // setTimeout(1,this.ul.fadeIn("slow"))
         }
         this.anhadirBotonDeAnhadir()
         this.anhadirBotonEliminar()
@@ -41,7 +43,7 @@ class Folder {
     anhadirElemento(nombre) {
         // Comprueba si hay un elemento en el nivel que se va a añadir, si existe no lo crea
         let existeElemento = false
-        Array.from(this.ul.children).forEach(function (hijo) {
+        this.ul.children().each(function (hijo) {
             if (["UL", "LI"].includes(hijo.tagName)) {
                 if (hijo.childNodes[1].data == nombre) {
                     existeElemento = true
@@ -52,10 +54,11 @@ class Folder {
             return
         }
         if (nombre.split(".").length == 2 && nombre.split(".")[1]) { // Comprueeba si tiene una extension
-            let archivo = document.createElement("li")
-            archivo.innerHTML = iconos[nombre.split(".")[1]] || iconos["ERROR"] //añade el icono de la extension, si no hay, añade el icono de error 
-            archivo.innerHTML += nombre
-            this.ul.appendChild(archivo)
+            let archivo = $(document.createElement("li"))
+                .html((iconos[nombre.split(".")[1]] || iconos["ERROR"]) + nombre) //añade el icono de la extension, si no hay, añade el icono de error 
+                archivo.fadeOut(0)
+                this.ul.append(archivo)
+                archivo.fadeIn("slow")
             this.anhadirBotonEliminar(archivo)
         } else if (nombre.split(".").length == 1) { // si no tiene extension, significa que es una carpeta
             new Folder(nombre, this.ul)
@@ -155,18 +158,17 @@ class Folder {
 
 
 // boton para generar un directorio de ejemplo
-let botonCreador = document.createElement("button")
-botonCreador.innerText = "crear arbol de ejemplo"
-document.getElementById("directorio").append(botonCreador)
-botonCreador.onclick = function () { home.importar(dicc) }
+let botonCreador = $(document.createElement("button")).text("crear arbol de ejemplo")
+    .on("click", function () { home.importar(dicc)})
+$("#directorio").append(botonCreador)
 
 
 //boton para eliminar el arbol actual
 let botonEliminador = document.createElement("button");
 botonEliminador.innerHTML = "Eliminar arbol"
-document.getElementById("directorio").append(botonEliminador)
+$("#directorio").append(botonEliminador)
 botonEliminador.onclick = function () {
-    Array.from(home.ul.children).forEach(function (hijo) {
+    home.ul.children().each(function (index,hijo) {
         if (["UL", "LI"].includes(hijo.tagName)) {
             hijo.remove()
         }
@@ -178,7 +180,7 @@ botonEliminador.onclick = function () {
 
 // Carpeta raiz
 let home = new Folder("/")
-document.getElementById("directorio").append(home.ul)
+$("#directorio").append(home.ul)
 
 
 
@@ -260,13 +262,13 @@ function buscador() {
 
 
 // buscador de archivos y carpetas 
-document.getElementById("busqueda").addEventListener("input", buscador)
+$("#busqueda").on("input", buscador)
 
 
 
 // el autocompletado del input de busqueda para cuando solo existe una coincidencia
-let busqueda = document.getElementById("busqueda")
-busqueda.addEventListener("keydown", function (e) {
+
+$("#busqueda").on("keydown", function (e) {
     if (e.key == "Tab") {
         e.preventDefault()
         if (resultadoDeBuscar.length == 1) {
